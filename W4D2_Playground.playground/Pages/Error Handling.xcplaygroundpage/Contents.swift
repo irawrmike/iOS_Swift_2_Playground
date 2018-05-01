@@ -54,23 +54,55 @@ catch let error {
  Create a Human class that has a name and age property. Also, create an initializer for this class to set its initial properties.
  */
 
+class Human {
+    var name: String = ""
+    var age: Int = 0
+    
+    init(name: String, age: Int) throws{
+        if name == "" {
+            throw humanError.nameError
+        }else{
+            self.name = name
+        }
+        if age == 0 {
+            throw humanError.ageError
+        }else{
+            self.age = age
+        }
+    }
+}
 
 /*:
  - Experiment:
  Create your own errors that throw when the name provided is empty or if the age is invalid. Go back and update the Human's initializer to throw an error when the data passed in is invalid.
  */
 
+enum humanError: Error {
+    case nameError
+    case ageError
+}
 
 /*:
  - Experiment:
  Now you can test your new Human class and surround it around the do-catch blocks.
  */
 
+do {
+    try Human(name: "mike", age: 0)
+} catch humanError.nameError {
+    print("Invalid name.")
+} catch humanError.ageError {
+    print("Invalid age.")
+}
 
 /*:
  - Experiment:
  Test your Human class again but don't surround it with a do-catch block and use `try?` instead. What do you notice? (What is the value of the new human when an error is thrown?)
  */
+
+var human = try? Human(name: "mike", age: 0)
+// the created human has a nil value using this method
+
 
 
 /*:
@@ -82,14 +114,23 @@ catch let error {
 let data = "{\"firstName\": \"Bob\", \"lastName\": \"Doe\", \"vehicles\": [\"car\", \"motorcycle\", \"train\"]}".data(using: .utf8)!
 
 
+struct Person: Codable {
+    var firstName: String
+    var lastName: String
+    var vehicles: [String]
+}
+
+let decoder = JSONDecoder()
+let person = try decoder.decode(Person.self, from: data)
+
 /*:
  - Callout(Challenge):
  Going back to our challenge from "More Optionals", let's rewrite the form valiation but we will use throw errors to indicate which piece is missing. We want to write a function that validates form data filled in by a user. Once we encounter the first field that is blank, we want to throw an error indicating which field is empty. Otherwise, print out all the information.
  */
 // Should pass all checks and print all information
-let username: String? = "user1"
-let password: String? = "password123"
-let email: String? = "user1@lighthouselabs.ca"
+//let username: String? = "user1"
+//let password: String? = "password123"
+//let email: String? = "user1@lighthouselabs.ca"
 
 // Should stop at password check and throw an error regarding empty password
 //let username: String? = "user1"
@@ -97,10 +138,40 @@ let email: String? = "user1@lighthouselabs.ca"
 //let email: String? = "user1@lighthouselabs.ca"
 
 // Should stop at username check and throw an error regarding empty user name
-//let username: String? = nil
-//let password: String? = nil
-//let email: String? = "user1@lighthouselabs.ca"
+let username: String? = nil
+let password: String? = nil
+let email: String? = "user1@lighthouselabs.ca"
 
+enum credentialErrors: Error{
+    case usernameError
+    case passwordError
+    case emailError
+}
+
+func checkCredentials(username: String?, password: String?, email: String?) throws {
+    if username != nil{
+    }else{
+        throw credentialErrors.usernameError
+    }
+    if password != nil{
+    }else{
+        throw credentialErrors.passwordError
+    }
+    if email != nil{
+    }else{
+        throw credentialErrors.emailError
+    }
+    print("passed. username: \(username!), password: \(password!), email: \(email!)")
+}
+do {
+    try checkCredentials(username: username, password: password, email: email)
+} catch credentialErrors.usernameError {
+    print("username invalid.")
+} catch credentialErrors.passwordError {
+    print("password invalid.")
+} catch credentialErrors.emailError {
+    print("email invalid.")
+}
 
 /*:
  - Callout(Challenge):
@@ -110,14 +181,51 @@ let email: String? = "user1@lighthouselabs.ca"
  
  Throw an error if the model doesn't exist, insufficient amount of money was given, or the car is out of stock.
  */
+
+enum carErrors: Error {
+    case modelError
+    case priceError
+    case countError
+}
+
 class HondaDealership{
   
   var availableCarSupply = ["Civic" : (price: 5000, count: 5),
                             "CRV" : (price: 7000, count: 9),
                             "Prelude" : (price: 9000, count: 2)]
   
-  
-  
+    func sellCar (model: String, offeredPrice: Int) throws{
+        if availableCarSupply[model] != nil{
+            if availableCarSupply[model]!.price <= offeredPrice{
+                if availableCarSupply[model]!.count >= 1{
+                    availableCarSupply[model]!.count -= 1
+                    print("\(model) sold!")
+                }else{
+                    throw carErrors.countError
+                }
+            }else{
+                throw carErrors.priceError
+            }
+        }else{
+            throw carErrors.modelError
+        }
+    }
 }
+
+var dealer = HondaDealership()
+
+try dealer.sellCar(model: "Prelude", offeredPrice: 9000)
+try dealer.sellCar(model: "Prelude", offeredPrice: 9000)
+
+do {
+    try dealer.sellCar(model: "Prelude", offeredPrice: 9000)
+} catch carErrors.modelError {
+    print("Sorry, we do not have that model.")
+} catch carErrors.priceError {
+    print("Sorry, we can't sell that model at the offered price.")
+} catch carErrors.countError {
+    print("Sorry, we're out of stock of that model.")
+}
+
 
 //: [Next](@next)
