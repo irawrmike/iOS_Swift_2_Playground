@@ -8,30 +8,50 @@
  Declare a optional Double value and set it to nil.
  */
 
+var optionalDouble: Double?
+optionalDouble = nil
+
 
 /*:
  - Experiment:
  Assign a value your optional Double.
  */
 
+optionalDouble = 4.5
 
 /*:
  - Experiment:
  Force unwrap the optional value. Why do you have to be careful about force unwrapping?
  */
 
+optionalDouble!
 
 /*:
  - Experiment:
  Use conditional unwrapping to verify if the optional has a value. Print the value if there is something, otherwise, print out to indicate there is no value present. Why is conditional unwrapping better than force unwrapping?
  */
 
+if let x = optionalDouble {
+    print("the value is: \(x)")
+}else{
+    print("no value present.")
+}
+
+// conditional unwrapping is better because not only do you protect your application from crashes but it also allows you to perform a different set of code if the value is nil
 
 /*:
  - Callout(Challenge):
  Create a function that removes the `nil` values from the array and returns a new array with only the valid Strings.
  */
 var testData: [String?] = ["Heather", nil, "Mike", "John", nil, nil, "Bob"]
+var newData: [String] = []
+
+for i in 0..<testData.count{
+    if let x = testData[i] {
+        newData.append(x)
+    }
+}
+print(newData)
 
 
 /*:
@@ -41,9 +61,9 @@ var testData: [String?] = ["Heather", nil, "Mike", "John", nil, nil, "Bob"]
  Below is some test data you can use to test your function.
  */
 // Should pass all checks and print all information
-let username: String? = "user1"
-let password: String? = "password123"
-let email: String? = "user1@lighthouselabs.ca"
+//let username: String? = "user1"
+//let password: String? = "password123"
+//let email: String? = "user1@lighthouselabs.ca"
 
 // Should stop at password check and indicate password field is empty
 //let username: String? = "user1"
@@ -54,7 +74,22 @@ let email: String? = "user1@lighthouselabs.ca"
 //let username: String? = nil
 //let password: String? = nil
 //let email: String? = "user1@lighthouselabs.ca"
-
+//
+//if username != nil {
+//    print("username is: \(username!)")
+//    if password != nil {
+//        print("password is: \(password!)")
+//        if email != nil {
+//            print("email is: \(email!)")
+//        }else{
+//            print("email was left blank")
+//        }
+//    }else{
+//        print("password was left blank")
+//    }
+//}else{
+//    print("username was left blank")
+//}
 
 
 /*:
@@ -86,11 +121,39 @@ isMyNumberANegativeValue(myNumber: myNumber)
  Try creating your own guard statement with different conditional statements. Notice which boolean condition causes the code the enter the 'else' block or bypass it entirely.
  */
 
+let myDouble: Double? = nil
+
+func testMyDouble() {
+    guard myDouble != nil else{
+        print("Double value is nil!")
+        return
+    }
+    print("Value of double is: \(myDouble!)")
+}
+
+testMyDouble()
 
 /*:
  - Experiment:
  Create a function that takes in two number parameters and divide them. We don't like dividing by zero, so ensure this doesn't happen. Otherwise, return the calculated value.
  */
+
+let number1: Float = 4.0
+let number2: Float = 0
+
+func divide(number1: Float, number2: Float) {
+    guard number1 != 0 else {
+        print("cannot divide 0")
+        return
+    }
+    guard number2 != 0 else {
+        print("cannot divide by 0")
+        return
+    }
+    print("the result is: \(number1 / number2)")
+}
+
+divide(number1: number1, number2: number2)
 
 
 /*:
@@ -124,11 +187,58 @@ isMyNumberAnOptional(myOptionalNumber: myOptionalNumber)
  Create a function that takes in an array of numbers. Have the function add all the numbers together and return the result. Make sure to `guard` against an empty array. Use `array.first` to check if there is at least one value in the array.
  */
 
+func sumIntArray(array: [Int]) -> Int {
+    var result: Int = 0
+    guard array.first != nil else {
+        return 0
+    }
+    for i in 0..<array.count{
+        result = result + array[i]
+    }
+    return result
+}
+
+let myIntArray: [Int] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+print(sumIntArray(array: myIntArray))
 
 /*:
  - Callout(Challenge):
  Now that we've learnt this new guard statement, let's rewrite the form validation challenge using the guard statements. How does it improve our current implementation?
  */
 
+// Should pass all checks and print all information
+//let username: String? = "user1"
+//let password: String? = "password123"
+//let email: String? = "user1@lighthouselabs.ca"
+
+// Should stop at password check and indicate password field is empty
+//let username: String? = "user1"
+//let password: String? = nil
+//let email: String? = "user1@lighthouselabs.ca"
+
+// Should stop at username check and indicate username field is empty
+let username: String? = nil
+let password: String? = nil
+let email: String? = "user1@lighthouselabs.ca"
+
+func checkFields(username: String?, password: String?, email: String?){
+guard username != nil else {
+    print("username is blank")
+    return
+}
+guard password != nil else {
+    print("password is blank")
+    return
+}
+guard email != nil else {
+    print("email is blank")
+    return
+}
+    print("username: \(username!)\npassword: \(password!)\nemail: \(email!)")
+}
+
+checkFields(username: username, password: password, email: email)
+
+// the guard statements make the code much cleaner and easier to read
 
 //: [Next](@next)
