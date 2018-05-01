@@ -46,6 +46,15 @@ let combinedValues = "abc" + 123
  Use the '*' operator to multiply a String and an Int. This returns a new String and repeats the given String the number of times delcared by the Int. ie: "abc" * 3 = "abcabcabc"
  */
 
+func * (left: String, right: Int) -> String {
+    var result: String = ""
+    for i in 1...right {
+        result = result + left
+    }
+    return result
+}
+
+let multipleString = "abc" * 3
 
 /*:
  - Experiment:
@@ -55,15 +64,16 @@ let combinedValues = "abc" + 123
  - Note:
  Changing the behaviour of existing operators is discouraged in real projects as it can cause confusion.
  */
-extension Int {
-  
-  // Comment this function in to try it!
-  //    static func + (left: Int, right: Int) -> Int{
-  //
-  //        return left - right
-  //    }
-}
+//extension Int {
 
+  // Comment this function in to try it!
+//      static func + (left: Int, right: Int) -> Int{
+//
+//          return left - right
+//      }
+//}
+
+//let number = 3 + 6 // becomes -3 (or 3 - 6)
 
 /*:
  ### Custom Operators
@@ -71,9 +81,10 @@ extension Int {
  */
 
 // Because the '+++' operator doesn't exist, new operators are declared at a global level using the `operator` keyword and marked with `prefix`, `infix`, `postfix`.
+    
 postfix operator +++
 postfix func +++ (number: Int) -> Int {
-  
+
   return number * 2
 }
 
@@ -87,6 +98,12 @@ var incrementTwo = incrementOne+++
  Create your own custom operator using the square root symbol here: √
  */
 
+prefix operator √
+prefix func √ (_ number: Double) -> Double {
+    return sqrt(number)
+}
+
+√9
 
 /*:
  ### Swift Operators Guidelines
@@ -100,6 +117,13 @@ var incrementTwo = incrementOne+++
  When we have percentage values, we tend to convert them into their decimal form before doing any arithmetic to them. Create an operator with the '%' that will be a convenient operator to convert Int values into a usable percentage value. ie: 10% = 0.1
  */
 
+postfix operator %
+postfix func % (_ number: Double) -> Double {
+    return number / 100
+}
+
+40%
+35.7%
 
 /*:
  - Callout(Challenge):
@@ -108,6 +132,19 @@ var incrementTwo = incrementOne+++
  For example, [1,2] + [3,4] = [4,6]. If the array count size are not the same, then return nil
  */
 
+func + (left: [Int], right: [Int]) -> [Int] {
+    var result: [Int] = []
+    if left.count != right.count {
+        return nil!
+    }else{
+        for i in 0..<left.count {
+            result.append(left[i] + right[i])
+        }
+        return result
+    }
+}
+
+var addedArrays = [1, 2] + [3, 4]
 
 
 //: [Next](@next)
