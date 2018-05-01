@@ -34,6 +34,11 @@ printMyTwoNumbers(num1: "three", num2: "four")
  Now you try! Write a generic function that takes in two parameters and multiply their value together and print the result. (Hint: You might run into an error after finishing. Continue to the next experiment to find out why!)
  */
 
+func multiplyTwoNumbers<Element: Numeric>(num1: Element, num2: Element) {
+    print("\(num1) * \(num2) = \(num1 * num2)")
+}
+
+multiplyTwoNumbers(num1: 43.324243543, num2: 67.6443242346)
 
 /*:
  - Experiment:
@@ -60,7 +65,20 @@ func multiply<Element: Numeric>(num1: Element, num2: Element) {
  For this experiment, refrain from using the array method `indexOf`. Also the protocol `Equatable` might be useful here. Search it up to see what it's about.
  */
 
+let array = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
+func findElementInArray<Element: Equatable>(array: [Element], element: Element) -> Int {
+    var index = 0
+    for i in 0..<array.count{
+        if element == array[i]{
+            return i
+        }
+        index += 1
+    }
+    return index
+}
+
+print(findElementInArray(array: array, element: 5))
 
 /*:
  - Callout(Challenge):
@@ -75,7 +93,24 @@ func multiply<Element: Numeric>(num1: Element, num2: Element) {
  - dequeue: remove an item from the queue, and return the removed element
  */
 
+func enqueue<Element> (array: [Any], item: Element) -> [Any]{
+    var queue: [Any] = array
+    queue.insert(item, at: queue.count)
+    return queue
+}
 
+func dequeue (array: [Any]) -> [Any]{
+    var queue: [Any] = array
+    queue.remove(at: 0)
+    return queue
+}
+
+var testArray: [Any] = [1, "two", 3.0, 4, "five", 6.0]
+testArray = enqueue(array: testArray, item: 7)
+testArray = enqueue(array: testArray, item: "eight")
+testArray = dequeue(array: testArray)
+testArray = dequeue(array: testArray)
+testArray = dequeue(array: testArray)
 
 //: [Next](@next)
 
